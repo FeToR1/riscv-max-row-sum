@@ -1,1 +1,3 @@
 .vscode
+build/*.native
+build/*.elf
