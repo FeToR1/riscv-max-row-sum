@@ -151,25 +151,21 @@ main:
 	sw	ra,172(sp)
 	sw	s0,168(sp)
 	addi	s0,sp,176
-	li	a5,6
-	sw	a5,-20(s0)
-	li	a5,6
-	sw	a5,-24(s0)
 	lla	a4,.LC0
-	addi	a5,s0,-172
+	addi	a5,s0,-164
 	mv	a3,a4
 	li	a4,144
 	mv	a2,a4
 	mv	a1,a3
 	mv	a0,a5
 	call	memcpy
-	addi	a5,s0,-172
+	addi	a5,s0,-164
 	mv	a2,a5
-	lw	a1,-24(s0)
-	lw	a0,-20(s0)
+	li	a1,6
+	li	a0,6
 	call	max_sum_row
-	sw	a0,-28(s0)
-	lw	a1,-28(s0)
+	sw	a0,-20(s0)
+	lw	a1,-20(s0)
 	lla	a0,.LC1
 	call	printf
 	li	a5,0

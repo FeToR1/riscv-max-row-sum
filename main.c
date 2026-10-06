@@ -25,10 +25,9 @@ int max_sum_row(int rows, int cols, const int matrix[rows][cols]) {
 }
 
 int main(void) {
-    int ROWS = 6;
-    int COLS = 6;
+    enum { ROWS = 6, COLS = 6 };
 
-    const int matrix[6][6] = {{1, 2, 3, 4, 5, 6}, {1, 2, 3, 4, 5, 6}, {6, 2, 3, 4, 5, 6},
+    const int matrix[ROWS][COLS] = {{1, 2, 3, 4, 5, 6}, {1, 2, 3, 4, 5, 6}, {6, 2, 3, 4, 5, 6},
                                     {6, 1, 3, 4, 5, 6}, {1, 2, 3, 4, 5, 6}, {1, 2, 3, 4, 5, 6}};
 
     int result = max_sum_row(ROWS, COLS, matrix);
