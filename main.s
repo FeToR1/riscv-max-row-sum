@@ -7,67 +7,69 @@ matrix:
     .word 1 2 3 4 5 6
     .word 1 2 3 4 5 6
 
-# t0 - matrix addres
-# t1 - size
-# t2 - i
-# t3 - j
-# t4 - cur sum
-# t5 - max value
-# t6 - max index
-# a3 - word * size
-
 .text
 .globl main
 main:
-    la t0, matrix 
-    li t1, 6
-    slli a3, t1, 2
-    li t5, 0
+    la a0, matrix
+    li a1, 6 # number of rows
+    li a2, 6 # number of columns
+    jal max_sum_row
 
-    addi t2, zero, 0
+    mv a1, a0
+    li a0, 1 # print a1
+    ecall
+
+    li a0, 10 # exit
+    ecall
+
+# a0 - element address, then result
+# a1 - rows
+# a2 - columns
+# a3 - current element
+
+# t0 - row address
+# t1 - row size in bytes
+# t2 - i
+# t3 - j
+# t4 - cur sum
+# t5 - max sum
+# t6 - max index
+max_sum_row:
+    mv t0, a0
+    slli t1, a2, 2 # t1 = a2 * 4 = 6 * 4
+    li t2, 0
 
 row_loop:
-    bge t2, t1, finale # if t2 >= t1 then finale
-    
+    bge t2, a1, rows_done
 
     mv a0, t0
-    mv a1, t1
-    jal row_sum  # jump to row_sum and save position to ra
+    li t3, 0
+    li t4, 0
 
-    beq t2, zero, update_max
-    ble a0, t5, noupd # if a0 <= t5 then noupd
+sum_loop:
+    bge t3, a2, sum_done
+
+    lw a3, 0(a0)  
+    add t4, t4, a3
+    addi a0, a0, 4
+    addi t3, t3, 1
+
+    j sum_loop
+
+sum_done:
+    beq t2, zero, update_max # init on first iter
+    ble t4, t5, noupd
 
 update_max:
-    mv t5, a0
+    mv t5, t4
     mv t6, t2
 
 noupd:
-    
-    addi t2, t2, 1 # t2 = t2 + 1
-    add t0, t0, a3 # t0 = t0 + a3    
+    addi t2, t2, 1
+    add t0, t0, t1
 
     j row_loop
-    
-row_sum:
-    li t3, 0 # t3 = 0
-    li t4, 0 # t4 = 0
-sum_loop:
-    bge t3, a1, sum_done # if t3 >= a1 then sum_done
-    
-    lw a2, 0(a0)
-    add t4, t4, a2 # t4 = t4 + a2
-    addi a0, a0, 4 # a0 = a0 + 4
-    addi t3, t3, 1 # t3 = t3 + 1
 
-    j sum_loop  # jump to sum_loop
-
-sum_done:
-    mv a0, t4
+rows_done:
+    mv a0, t6
     ret
-finale:
-    mv a1, t6
-    li a0, 1
-    ecall
-
-    li a0, 10
-    ecall
